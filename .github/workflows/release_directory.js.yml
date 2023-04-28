@@ -1,11 +1,12 @@
-name: "Release for directory ${{ inputs.directory }}"
-
 on:
   workflow_call:
     inputs:
       directory: # the variable you can use in place of a matrix
         required: true
         type: string
+
+name: "Release for directory ${{ inputs.directory }}"
+
 defaults:
   run:
     working-directory: ${{ inputs.directory }}
