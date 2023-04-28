@@ -4,20 +4,30 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  {{ count }}
-  <button @click="count++">Count</button>
+  <div>
+    <button @click="increment">{{ count }}</button>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   data() {
+    const count = ref(0);
+
+    const increment = async () => {
+      const response = await fetch('http://localhost:3000/api/count'); //'server/api/count'
+      const data = await response.json();
+      count.value = data.count;
+    };
+
     return {
-      count: 0
-    }
-  }
-})
+      count,
+      increment,
+    };
+  },
+});
 </script>
 <!-- <template>
   <header>
