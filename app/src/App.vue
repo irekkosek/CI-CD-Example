@@ -4,6 +4,22 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
+  {{ count }}
+  <button @click="count++">Count</button>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  data() {
+    return {
+      count: 0
+    }
+  }
+})
+</script>
+<!-- <template>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
@@ -18,7 +34,7 @@ import HelloWorld from './components/HelloWorld.vue'
   </header>
 
   <RouterView />
-</template>
+</template> -->
 
 <style scoped>
 header {
