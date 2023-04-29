@@ -12,13 +12,13 @@ on:
 
 jobs:
   directories-matrix:
-    uses: ./.github/workflows/release_directory.js.yml 
-    with:
-      directory: ${{ matrix.directory }}
-    secrets: inherit
     strategy:
       # super important if you want to see all results, even if one fails
       # fail-fast is true by default
       fail-fast: false
       matrix:
         directory: ["app", "server"] 
+    uses: ./.github/workflows/release_directory.yml
+    with:
+      directory: ${{ matrix.directory }}
+    secrets: inherit

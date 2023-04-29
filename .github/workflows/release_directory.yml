@@ -8,15 +8,14 @@ on:
         type: string
         
 
+         
 jobs:
 
   test:
     runs-on: ubuntu-latest 
     steps:
-    - name: "📂 change directory"
-      run: git checkout HEAD -- ${{ inputs.directory }}
     - name: Test and lint
-      uses: open-sauced/open-sauced/.github/workflows/development.yml@main
+      uses: ./.github/workflows/development.yml
     
 
   docker:
@@ -24,13 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "☁️ checkout repository"
-        uses: actions/checkout@v
-
-      - name: "📂 change directory"
-        run: git checkout HEAD -- ${{ inputs.directory }}
-
-      - name: "📂 echo directory"
-        run: echo ${{ inputs.directory }}
+        uses: actions/checkout@v2
 
       - name: "🔧 setup buildx"
         uses: docker/setup-buildx-action@v1
@@ -75,16 +68,19 @@ jobs:
         uses: actions/checkout@v2
 
       - name: "🔧 setup node"
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v3
         with:
-          node-version: 16
-          cache-dependency-path: subdir/package-lock.json`
+          node-version: latest
+          cache: 'npm'
+          cache-dependency-path: ${{ inputs.directory }}/package-lock.json`
 
       - name: "🔧 install npm@latest"
         run: npm i -g npm@latest
 
       - name: "📦 install dependencies"
         uses: bahmutov/npm-install@v1
+        with:
+          working-directory: ${{ inputs.directory }}
 
       - name: "📊 repository visualizer"
         id: diagram
@@ -93,8 +89,11 @@ jobs:
           excluded_paths: "node_modules,build,.github,npm-shrinkwrap.json"
           output_file: "public/diagram.svg"
           should_push: false
-          root_path: "src/"
+          root_path: "${{ inputs.directory }}/"
           artifact_name: "diagram"
+
+      - name: "📂 switch directory"
+        run: cd ${{ inputs.directory }}
 
       - name: "🚀 static app"
         run: npm run build
@@ -102,8 +101,8 @@ jobs:
       - name: "📂 production artifacts"
         uses: actions/upload-artifact@v2
         with:
-          name: build
-          path: build
+          name: ${{ inputs.directory }}-build
+          path: ${{ inputs.directory }}/build
 
   release:
     environment:
