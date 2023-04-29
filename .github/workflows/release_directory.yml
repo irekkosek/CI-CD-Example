@@ -12,11 +12,11 @@ on:
 jobs:
 
   test:
-    runs-on: ubuntu-latest 
-    steps:
-    - name: Test and lint
-      uses: ./.github/workflows/development.yml
-    
+    name: Test and lint
+    uses: ./.github/workflows/development.yml
+    with:
+      directory: ${{ inputs.directory }}
+
 
   docker:
     name: Build container
