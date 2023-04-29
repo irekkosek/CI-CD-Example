@@ -1,21 +1,22 @@
+name: "Release for directory"
+
 on:
   workflow_call:
     inputs:
       directory: # the variable you can use in place of a matrix
         required: true
         type: string
-
-name: "Release for directory ${{ inputs.directory }}"
-
-defaults:
-  run:
-    working-directory: ${{ inputs.directory }}
+        
 
 jobs:
-  
-  test: 
-    name: Test and lint
-    uses: open-sauced/open-sauced/.github/workflows/development.yml@main
+
+  test:
+    runs-on: ubuntu-latest 
+    steps:
+    - name: "📂 change directory"
+      run: git checkout HEAD -- ${{ inputs.directory }}
+    - name: Test and lint
+      uses: open-sauced/open-sauced/.github/workflows/development.yml@main
     
 
   docker:
@@ -23,7 +24,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "☁️ checkout repository"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v
+
+      - name: "📂 change directory"
+        run: git checkout HEAD -- ${{ inputs.directory }}
+
+      - name: "📂 echo directory"
+        run: echo ${{ inputs.directory }}
 
       - name: "🔧 setup buildx"
         uses: docker/setup-buildx-action@v1
@@ -71,6 +78,7 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 16
+          cache-dependency-path: subdir/package-lock.json`
 
       - name: "🔧 install npm@latest"
         run: npm i -g npm@latest
