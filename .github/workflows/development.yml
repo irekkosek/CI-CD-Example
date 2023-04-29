@@ -35,10 +35,10 @@ jobs:
             working-directory: ${{ inputs.directory }}
 
       - name: "📂 switch directory"
-        run: cd ${{ inputs.directory }}
+        run: cd ${{ inputs.directory }} && echo $PWD
     
       - name: "🔍 run tests"
-        run: npm run test --if-present
+        run: echo $PWD && npm run test --if-present
 
   lint:
     name: Code standards
