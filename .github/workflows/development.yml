@@ -33,12 +33,10 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
             working-directory: ${{ inputs.directory }}
-
-      - name: "📂 switch directory"
-        run: cd ${{ inputs.directory }} && echo $PWD
     
       - name: "🔍 run tests"
-        run: echo $PWD && npm run test --if-present
+        working-directory: ${{ inputs.directory }}
+        run: npm run test --if-present
 
   lint:
     name: Code standards
