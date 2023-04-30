@@ -127,8 +127,8 @@ jobs:
   release:
     environment:
       name: production
-      url: https://github.com/${{ github.repository }}/releases/tag/${{ steps.semantic-release.outputs.release-tag }}
-    name: Semantic release
+      url: ${{ steps.gha-release.outputs.url }}
+    name: release
     needs:
       - test
       - docker
@@ -164,10 +164,9 @@ jobs:
           path: .
 
       - name: "🚀 release"
-        id: semantic-release
-        uses: open-sauced/semantic-release-conventional-config@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: gha-release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
 
   cleanup:
     name: Cleanup actions
