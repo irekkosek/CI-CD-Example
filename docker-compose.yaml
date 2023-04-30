@@ -9,6 +9,7 @@ services:
         - NODE_VERSION=${NODE_VERSION:-19.9.0-bullseye}
     ports:
       - 8080:5173
+      - 8083:80
     
   server1:
     build:
