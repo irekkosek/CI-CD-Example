@@ -120,7 +120,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ inputs.directory }}-build
-          path: ${{ inputs.directory }}/build
+          path: |
+            ${{ inputs.directory }}/dist
+            ${{ inputs.directory }}/index.js 
 
   release:
     environment:
