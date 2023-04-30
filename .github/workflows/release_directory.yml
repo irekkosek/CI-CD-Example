@@ -54,14 +54,13 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ${{ inputs.directory }}
-          # target: production
+          target: production
           tags:  ghcr.io/${{ steps.meta.outputs.tags }}
-          # labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta.outputs.labels }}
           push: true
-          # secrets: |
-          #   GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
-          # cache-from: type=gha, scope=${{ github.workflow }}
-          # cache-to: type=gha, scope=${{ github.workflow }}
+          cache-from: type=gha, scope=${{ github.workflow }}
+          cache-to: type=gha, scope=${{ github.workflow }}
+          
       - name: "📦 docker build"
         uses: docker/build-push-action@v2
         with:
