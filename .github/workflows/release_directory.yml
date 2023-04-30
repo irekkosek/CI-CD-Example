@@ -114,6 +114,7 @@ jobs:
         run: cd ${{ inputs.directory }}
 
       - name: "🚀 static app"
+        working-directory: ${{ inputs.directory }}
         run: npm run build
 
       - name: "📂 production artifacts"
