@@ -26,3 +26,4 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 EXPOSE 5137
 CMD ["dumb-init", "npm", "run" ,"dev","--","--host"]
+ 
