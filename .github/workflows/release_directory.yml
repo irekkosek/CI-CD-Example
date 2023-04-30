@@ -43,17 +43,37 @@ jobs:
           images: "${{ github.repository }}-${{ inputs.directory }}"
           tags: latest
 
-      - name: "📦 docker build"
-        uses: docker/build-push-action@v2
+      - name: "🔑 Login to GitHub Container Registry"
+        uses: docker/login-action@v2
         with:
-          context: .
-          tags: ${{ steps.meta.outputs.tags }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "📦 docker push"
+        uses: docker/build-push-action@v4
+        with:
+          context: ${{ inputs.directory }}
+          target: production
+          tags:  ghcr.io/${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=docker,dest=/tmp/docker.tar
-          push: false
+          push: true
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
 
+      - name: "📦 docker build"
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ inputs.directory }}
+          target: production
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          outputs: type=docker,dest=/tmp/docker.tar
+          cache-from: type=gha, scope=${{ github.workflow }}
+          cache-to: type=gha, scope=${{ github.workflow }}
+
+
+          
       - name: "📂 docker artifacts"
         uses: actions/upload-artifact@v2
         with:
@@ -72,7 +92,7 @@ jobs:
         with:
           node-version: latest
           cache: 'npm'
-          cache-dependency-path: ${{ inputs.directory }}/package-lock.json`
+          cache-dependency-path: ${{ inputs.directory }}/package-lock.json
 
       - name: "🔧 install npm@latest"
         run: npm i -g npm@latest
@@ -87,22 +107,22 @@ jobs:
         uses: githubocto/repo-visualizer@0.7.1
         with:
           excluded_paths: "node_modules,build,.github,npm-shrinkwrap.json"
-          output_file: "public/diagram.svg"
+          output_file: "${{ inputs.directory }}/public/diagram.svg"
           should_push: false
           root_path: "${{ inputs.directory }}/"
           artifact_name: "diagram"
 
-      - name: "📂 switch directory"
-        run: cd ${{ inputs.directory }}
-
       - name: "🚀 static app"
+        working-directory: ${{ inputs.directory }}
         run: npm run build
 
       - name: "📂 production artifacts"
         uses: actions/upload-artifact@v2
         with:
           name: ${{ inputs.directory }}-build
-          path: ${{ inputs.directory }}/build
+          path: |
+            ${{ inputs.directory }}/dist
+            ${{ inputs.directory }}/index.js 
 
   release:
     environment:
@@ -134,8 +154,8 @@ jobs:
       - name: "📂 download build artifacts"
         uses: actions/download-artifact@v2
         with:
-          name: build
-          path: build
+          name: ${{ inputs.directory }}-build
+          path: ${{ inputs.directory }}/build
 
       - name: "📂 download diagram artifacts"
         uses: actions/download-artifact@v2

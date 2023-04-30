@@ -17,7 +17,7 @@ export default defineComponent({
     const count = ref(0);
 
     const increment = async () => {
-      const response = await fetch('http://localhost:3000/api/count'); //'server/api/count'
+      const response = await fetch('http://localhost:3000/api/count/'); //'server/api/count'
       const data = await response.json();
       count.value = data.count;
     };

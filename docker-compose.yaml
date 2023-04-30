@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: ./app
+      target: ${DOCKER-COMPOSE-TARGET:-development}
+      args:
+        - NODE_VERSION=${NODE_VERSION:-19.9.0-bullseye}
+    ports:
+      - 8080:5173
+      - 8083:80
+    
+  server1:
+    build:
+      context: ./server
+      target: ${DOCKER-COMPOSE-TARGET:-development}
+      args:
+        - NODE_VERSION=${NODE_VERSION:-19.9.0-bullseye}
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules      
+    ports:
+      - 8081:3000
+  server2:
+    build:
+      context: ./server
+      target: ${DOCKER-COMPOSE-TARGET:-development}
+      args:
+        - NODE_VERSION=${NODE_VERSION:-19.9.0-bullseye}
+    ports:
+      - 8082:3000
+
