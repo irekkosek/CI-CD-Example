@@ -66,7 +66,7 @@ jobs:
             GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
-
+          
       - name: "📂 docker artifacts"
         uses: actions/upload-artifact@v2
         with:
@@ -85,6 +85,7 @@ jobs:
         with:
           node-version: latest
           cache: 'npm'
+          cache-dependency-path: ${{ inputs.directory }}/package-lock.json
 
       - name: "🔧 install npm@latest"
         run: npm i -g npm@latest
