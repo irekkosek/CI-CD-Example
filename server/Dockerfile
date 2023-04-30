@@ -10,7 +10,7 @@ FROM node:${NODE_VERSION} AS build-production
 WORKDIR /usr/src/app
 COPY  --from=build /usr/src/app/node_modules /usr/src/app/node_modules
 COPY . /usr/src/app
-RUN npm run build
+RUN npm ci && npm run build
 
 FROM node:${NODE_VERSION}-slim AS production
 ENV NODE_ENV production
