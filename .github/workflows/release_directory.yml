@@ -128,7 +128,7 @@ jobs:
     environment:
       name: production
       url: ${{ steps.gha-release.outputs.url }}
-    name: Semantic release
+    name: release
     needs:
       - test
       - docker
