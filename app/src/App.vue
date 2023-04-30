@@ -17,7 +17,7 @@ export default defineComponent({
     const count = ref(0);
     const BACKEND_IP = 'localhost';
     const increment = async () => {
-  const response = await fetch(`http://${BACKEND_IP}/api/count/`); 
+  const response = await fetch(`http://localhost/api/count`); //`http://${BACKEND_IP}/api/count/` 
   const data = await response.json();
   count.value = data.count;
 };
