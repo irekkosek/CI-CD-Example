@@ -10,9 +10,10 @@ FROM node:${NODE_VERSION} AS build-production
 WORKDIR /usr/src/app
 COPY  --from=build /usr/src/app/node_modules /usr/src/app/node_modules
 COPY . /usr/src/app
+ENV BACKEND_IP=localhost
 RUN npm run build
 
-FROM nginx as production
+FROM nginx:1.23.4-alpine-slim as production
 RUN mkdir /app
 COPY --from=build-production /usr/src/app/dist /app
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -25,5 +26,7 @@ COPY --from=build /usr/src/app/node_modules /usr/src/app/node_modules
 WORKDIR /usr/src/app
 COPY . /usr/src/app
 EXPOSE 5137
+ARG BACKEND_IP=localhost
+ENV BACKEND_IP=${BACKEND_IP}
 CMD ["dumb-init", "npm", "run" ,"dev","--","--host"]
  

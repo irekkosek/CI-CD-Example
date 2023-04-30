@@ -2,9 +2,11 @@ version: '3.9'
 
 services:
   app:
+    environment:
+      - BACKEND_IP=${BACKEND_IP:-server}
     build:
       context: ./app
-      target: ${DOCKER-COMPOSE-TARGET:-development}
+      target: ${DOCKER_COMPOSE_TARGET:-development}
       args:
         - NODE_VERSION=${NODE_VERSION:-19.9.0-bullseye}
     ports:
@@ -14,7 +16,7 @@ services:
   server1:
     build:
       context: ./server
-      target: ${DOCKER-COMPOSE-TARGET:-development}
+      target: ${DOCKER_COMPOSE_TARGET:-development}
       args:
         - NODE_VERSION=${NODE_VERSION:-19.9.0-bullseye}
     volumes:
@@ -25,9 +27,21 @@ services:
   server2:
     build:
       context: ./server
-      target: ${DOCKER-COMPOSE-TARGET:-development}
+      target: ${DOCKER_COMPOSE_TARGET:-development}
       args:
         - NODE_VERSION=${NODE_VERSION:-19.9.0-bullseye}
     ports:
       - 8082:3000
+
+  server:
+    env_file:
+      - ./load-balancer/compose.env
+    environment:
+    - NGINX_ENVSUBST_TEMPLATE_SUFFIX = ".conf"
+    build: ./load-balancer
+    ports:
+      - 80:80
+    volumes:
+      - ./load-balancer/templates:/etc/nginx/templates
+
 

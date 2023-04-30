@@ -15,12 +15,12 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   data() {
     const count = ref(0);
-
+    const BACKEND_IP = 'localhost';
     const increment = async () => {
-      const response = await fetch('http://localhost:3000/api/count/'); //'server/api/count'
-      const data = await response.json();
-      count.value = data.count;
-    };
+  const response = await fetch(`http://${BACKEND_IP}/api/count/`); 
+  const data = await response.json();
+  count.value = data.count;
+};
 
     return {
       count,
