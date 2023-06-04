@@ -1,9 +1,7 @@
 
-# Euvic Recruitment Task
+
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-
-This is my approach to the challenge presented before me by Euvic Recruitment Team
 
 My solution includes implementation of following features:
 - Frontend and Backend talk over API
